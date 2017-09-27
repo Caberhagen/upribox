@@ -25,7 +25,7 @@
     - restart privoxy
 
 - name: copy custom template files
-  synchronize: src=custom_templates/ dest=/etc/privoxy/custom_templates/ delete=yes recursive=yes checksum=yes
+  synchronize: src={{role_path}}/files/custom_templates/ dest=/etc/privoxy/custom_templates/ delete=yes recursive=yes checksum=yes
   notify:
     - restart privoxy
 
@@ -48,8 +48,7 @@
   when: res|changed or default_settings.log.general.path != "/var/log" or default_settings.log.privoxy.subdir != "privoxy"
 
 - name: remove log files from other environment
-  file: path={{other_env.default_settings.log.general.path}}/{{other_env.default_settings.log.privoxy.subdir}} state=absent #/{{item.value}} 
-  #with_dict: "{{other_env.default_settings.log.privoxy.logfiles}}"
+  file: path={{other_env.default_settings.log.general.path}}/{{other_env.default_settings.log.privoxy.subdir}} state=absent
   when: res|changed
 
 - name: modify logrotate.d entry
